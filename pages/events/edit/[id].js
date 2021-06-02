@@ -5,6 +5,7 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
 import Layout from '@/components/Layout'
+import Modal from '@/components/Modal'
 import { API_URL } from '@/config/index'
 import styles from '@/styles/Form.module.css'
 import { ToastContainer, toast } from 'react-toastify';
@@ -22,6 +23,8 @@ export default function EditEventPage({evt}) {
     })
     const [imagePreview, setImagePreview] = useState
     (evt.image ? evt.image.formats.thumbnail.url : null)
+
+    const [showModal, setShowModal] = useState(false)
 
     const router = useRouter()
 
@@ -157,11 +160,14 @@ export default function EditEventPage({evt}) {
             )}
 
             <div>
-                <button className="btn-secondary">
+                <button onClick={() => setShowModal(true)}
+                className="btn-secondary">
                 <FaImage /> Set Image
                 </button>
             </div>
-
+                <Modal show={showModal} onClose={() => setShowModal(false)}>
+                    IMAGE UPLOAD
+                </Modal>
         </Layout>
     )
 }
