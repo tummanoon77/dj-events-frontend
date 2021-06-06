@@ -8,13 +8,14 @@ import Layout from '@/components/Layout'
 import styles from '@/styles/AuthForm.module.css'
 
 export default function RegisterPage() {
-
     const [username,setUsername] = useState('')
     const [email,setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
 
     const {register,error } = useContext(AuthContext)
+    
+    useEffect(() => error && toast.error(error))
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -72,7 +73,7 @@ export default function RegisterPage() {
                          />
                     </div>
 
-                    <input type='submit' value='Login'
+                    <input type='submit' value='Register'
                     className='btn' />
                 </form>
 
