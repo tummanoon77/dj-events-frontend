@@ -1,3 +1,4 @@
+import {parseCookies} from '@/helpers/index'
 import moment from 'moment'
 import {FaImage} from 'react-icons/fa'
 import {useState} from 'react'
@@ -12,7 +13,7 @@ import styles from '@/styles/Form.module.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function EditEventPage({evt}) {
+export default function EditEventPage({evt, token}) {
     const [values, setValues] = useState({
         name: evt.name,
         performers: evt.performers,
@@ -43,12 +44,17 @@ export default function EditEventPage({evt}) {
             const res = await fetch(`${API_URL}/events/${evt.id}`,{
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(values),
             })
 
             if(!res.ok){
+                if(res.status === 403 || res.status === 401) {
+                toast.error('Unauthorized')  
+                return
+                }
                 toast.error('Something Went Wrong')
             } else {
                 const evt = await res.json()
@@ -153,11 +159,9 @@ export default function EditEventPage({evt}) {
                     value={values.description}
                     onChange={handleInputChange}></textarea>
                 </div>
-
                 <input type="submit" value="Update Event" 
                 className='btn'/>
             </form>
-
             <h2>Event Image</h2>
             {imagePreview ? (
                 <Image src={imagePreview} height={100} width={170} />
@@ -166,7 +170,6 @@ export default function EditEventPage({evt}) {
                 <p>No image uploaded </p>
             </div>
             )}
-
             <div>
                 <button onClick={() => setShowModal(true)}
                 className="btn-secondary">
@@ -182,14 +185,15 @@ export default function EditEventPage({evt}) {
 
 export async function getServerSideProps({params: {id},
 req}) {
+    const {token} = parseCookies(req)
+
     const res = await fetch(`${API_URL}/events/${id}`)
     const evt = await res.json()
 
-    console.log(req.headers.cookie);
-
-    return {
+     return {
         props:{
-            evt
-        }
+            evt,
+            token
+        },
     }
 }
