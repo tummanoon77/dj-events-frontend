@@ -143,10 +143,11 @@ export default function AddEventPage({token}) {
                     value={values.description}
                     onChange={handleInputChange}></textarea>
                 </div>
-
+               
                 <input type="submit" value="Add Event" 
                 className='btn'/>
             </form>
+            
         </Layout>
     )
 }
