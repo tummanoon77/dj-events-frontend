@@ -43,7 +43,3 @@ export default function ImageUpload({ evtId, imageUploaded, token }) {
   )
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 3ddccbf6e55ed07fd0ecd8bfb300a6f5a5f772c6
