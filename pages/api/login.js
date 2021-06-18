@@ -1,60 +1,44 @@
-import {FaUser} from 'react-icons/fa'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import {useState,useEffect, useContext} from 'react'
-import AuthContext from '@/context/AuthContext'
-import Link from 'next/link'
-import Layout from '@/components/Layout'
-import styles from '@/styles/AuthForm.module.css'
+import cookie from 'cookie'
+import { API_URL } from '@/config/index'
 
-export default function LoginPage() {
-    const [email,setEmail] = useState('')
-    const [password, setPassword] = useState('')
+export default async (req, res) => {
+  if (req.method === 'POST') {
+    const { identifier, password } = req.body
 
-    const {login,error } = useContext(AuthContext)
+    const strapiRes = await fetch(`${API_URL}/auth/local`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        identifier,
+        password,
+      }),
+    })
 
-    useEffect(() => error && toast.error(error))
+    const data = await strapiRes.json()
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        login({ email, password})
+    if (strapiRes.ok) {
+      // Set Cookie
+      res.setHeader(
+        'Set-Cookie',
+        cookie.serialize('token', data.jwt, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== 'development',
+          maxAge: 60 * 60 * 24 * 7, // 1 week
+          sameSite: 'strict',
+          path: '/',
+        })
+      )
+
+      res.status(200).json({ user: data.user })
+    } else {
+      res
+        .status(data.statusCode)
+        .json({ message: data.message[0].messages[0].message })
     }
-
-    return (
-        <Layout title ='User Login'>
-            <div className={styles.auth}>
-                <h1>
-                    <FaUser /> Log In
-                </h1>
-                <ToastContainer />
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor='email'>Email Address</label>
-                        <input
-                        type='email'
-                        id='email'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                         />
-                    </div>
-                    <div>
-                        <label htmlFor='password'>Password</label>
-                        <input
-                        type='password'
-                        id='password'
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                         />
-                    </div>
-
-                    <input type='submit' value='Login'
-                    className='btn' />
-                </form>
-
-                <p>
-    Don't have an account? <Link href='/account/register'>Register</Link>
-                </p>
-            </div>
-        </Layout>
-    )
+  } else {
+    res.setHeader('Allow', ['POST'])
+    res.status(405).json({ message: `Method ${req.method} not allowed` })
+  }
 }
