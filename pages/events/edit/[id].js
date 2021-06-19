@@ -38,7 +38,7 @@ export default function EditEventPage({evt, token}) {
             (element) => element === '')
 
             if(hasEmptyFields){
-                toast.error('Please fill in all fields')
+               // toast.error('Please fill in all fields')
             }
 
             const res = await fetch(`${API_URL}/events/${evt.id}`,{
@@ -52,10 +52,10 @@ export default function EditEventPage({evt, token}) {
 
             if(!res.ok){
                 if(res.status === 403 || res.status === 401) {
-                toast.error('Unauthorized')  
+              //  toast.error('Unauthorized')  
                 return
                 }
-                toast.error('Something Went Wrong')
+               // toast.error('Something Went Wrong')
             } else {
                 const evt = await res.json()
                 router.push(`/events/${evt.slug}`)
@@ -78,7 +78,7 @@ export default function EditEventPage({evt, token}) {
         <Layout title= 'Edit Event'>
             <Link href='/events'>Go Back</Link>
             <h1>Edit Event</h1>
-            //<ToastContainer />
+         
             <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.grid}>
                 <div>
