@@ -29,7 +29,7 @@ export default function AddEventPage({token}) {
             (element) => element === '')
 
             if(hasEmptyFields){
-                toast.error('Please fill in all fields')
+              //  toast.error('Please fill in all fields')
             }
 
             const res = await fetch(`${API_URL}/events`,{
@@ -43,10 +43,10 @@ export default function AddEventPage({token}) {
 
             if(!res.ok){
                 if(res.status === 403 || res.status === 401){
-                    toast.error('No token included')
+                   // toast.error('No token included')
                     return
                 }
-                toast.error('Something Went Wrong')
+               // toast.error('Something Went Wrong')
             } else {
                 const evt = await res.json()
                 router.push(`/events/${evt.slug}`)
@@ -62,7 +62,7 @@ export default function AddEventPage({token}) {
         <Layout title= 'Add New Event'>
             <Link href='/events'>Go Back</Link>
             <h1>Add Event</h1>
-           // <ToastContainer />
+         
             <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.grid}>
                 <div>
