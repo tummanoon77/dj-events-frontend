@@ -10,8 +10,8 @@ import ImageUpload from '@/components/ImageUpload'
 import Modal from '@/components/Modal'
 import { API_URL } from '@/config/index'
 import styles from '@/styles/Form.module.css'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+//import { ToastContainer, toast } from 'react-toastify';
+//import 'react-toastify/dist/ReactToastify.css';
 
 export default function EditEventPage({evt, token}) {
     const [values, setValues] = useState({
@@ -78,7 +78,7 @@ export default function EditEventPage({evt, token}) {
         <Layout title= 'Edit Event'>
             <Link href='/events'>Go Back</Link>
             <h1>Edit Event</h1>
-            <ToastContainer />
+            //<ToastContainer />
             <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.grid}>
                 <div>
